@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#171538">
+<title>베스티 투자 유형 테스트</title>
+<meta name="description" content="별똥별이 「주식.」 한마디를 남기고 갔어요. 달토끼 베스티와 친구들 중 당신은 어떤 투자 유형? 1분 테스트.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="베스티 투자 유형 테스트">
+<meta property="og:title" content="나는 어떤 투자 유형일까? · 베스티 투자 유형 테스트">
+<meta property="og:description" content="별똥별이 「주식.」 한마디를 남기고 갔어요. 달토끼 베스티와 친구들 중 당신은 누구? 1분, 8문항.">
+<meta property="og:image" content="https://yunju-2626.github.io/bestie-invest-type/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://yunju-2626.github.io/bestie-invest-type/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: one phone-width column. Night-sky bands (intro, loading) sit on a lavender-tinted page; each result type keeps its own pastel. */
+:root{
+  --bg:#f4f2fb; --surface:#ffffff; --fg:#221f3d; --muted:#6b668a; --line:#e3dff2;
+  --accent:#6e63f5; --accent-deep:#5a4fe0; --accent-fg:#ffffff;
+  --sky:#171538; --sky-2:#241f5e; --sky-fg:#f3efff; --sky-muted:#b8b1e6;
+  --moon:#ffd96a; --ink:#1b1630;
+  --display:'Jua','Noto Sans KR',system-ui,sans-serif;
+  --body:'Noto Sans KR',system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#100f26; --surface:#1b1940; --fg:#f3efff; --muted:#aaa4cf; --line:#2f2b62;
+    --accent:#8f86ff; --accent-deep:#7a70f5; --accent-fg:#141235;
+    --sky:#0c0b1f; --sky-2:#1b1940; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#100f26; --surface:#1b1940; --fg:#f3efff; --muted:#aaa4cf; --line:#2f2b62;
+  --accent:#8f86ff; --accent-deep:#7a70f5; --accent-fg:#141235;
+  --sky:#0c0b1f; --sky-2:#1b1940; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.6;min-height:100%;touch-action:manipulation}
+.wrap{max-width:480px;margin:0 auto;padding-inline:16px;padding-block:16px 56px}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.2;margin:0;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer;color:inherit}
+button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+
+/* avatars */
+.av{display:block;object-fit:contain}
+.av.sq{border-radius:22%}
+
+/* night band */
+.sky{position:relative;border-radius:28px;background:radial-gradient(120% 80% at 50% 110%,var(--sky-2),var(--sky) 60%);color:var(--sky-fg);overflow:hidden;isolation:isolate}
+.sky .stars,.sky .stars::after{content:"";position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(1.5px 1.5px at 12% 18%,#fff 60%,transparent),radial-gradient(1px 1px at 28% 62%,#fff 60%,transparent),
+  radial-gradient(2px 2px at 40% 6%,#fff 60%,transparent),radial-gradient(1px 1px at 66% 64%,#fff 60%,transparent),
+  radial-gradient(1.5px 1.5px at 73% 70%,#fff 60%,transparent),radial-gradient(1px 1px at 86% 22%,#fff 60%,transparent),
+  radial-gradient(1px 1px at 8% 80%,#fff 60%,transparent),radial-gradient(1.5px 1.5px at 93% 56%,#fff 60%,transparent),
+  radial-gradient(1px 1px at 52% 88%,#fff 60%,transparent),radial-gradient(1px 1px at 22% 72%,#fff 60%,transparent);opacity:.8}
+.sky .stars::after{transform:scale(-1,1) translateX(-7%);opacity:.5}
+.sky .moon{position:absolute;top:-38px;right:-38px;width:128px;height:128px;border-radius:50%;background:var(--moon);box-shadow:inset -22px -8px 0 rgba(0,0,0,.08),0 0 60px rgba(255,217,106,.25)}
+.sky .shoot{position:absolute;top:18%;left:-30%;width:160px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,#fff);transform:rotate(18deg);opacity:0}
+@media (prefers-reduced-motion:no-preference){.sky .shoot{animation:shoot 5.5s ease-in 1.2s infinite}}
+@keyframes shoot{0%{opacity:0;transform:translate(0,0) rotate(18deg)}6%{opacity:1}18%{opacity:0;transform:translate(130vw,42vw) rotate(18deg)}100%{opacity:0;transform:translate(130vw,42vw) rotate(18deg)}}
+
+/* intro */
+.intro .sky{padding:34px 22px 0;text-align:center}
+.intro .eyebrow{color:var(--sky-muted)}
+.intro h1{font-size:40px;margin-top:10px;position:relative}
+.intro .sub{color:var(--sky-muted);margin-top:12px;font-size:15px;line-height:1.55}
+.intro .cast{position:relative;margin-top:22px;height:196px}
+.intro .cast .bestie{position:absolute;left:50%;bottom:0;width:120px;height:170px;transform:translateX(-50%);filter:drop-shadow(0 12px 18px rgba(0,0,0,.35));z-index:2}
+.intro .cast .f{position:absolute;bottom:14px;width:56px;height:56px;border:3px solid var(--sky-fg);border-radius:26%;box-shadow:0 6px 14px rgba(0,0,0,.3)}
+.intro .cast .f.i1{left:4%;bottom:38px;transform:rotate(-10deg)}
+.intro .cast .f.i2{left:20%;bottom:8px;transform:rotate(6deg)}
+.intro .cast .f.i3{right:20%;bottom:8px;transform:rotate(-6deg)}
+.intro .cast .f.i4{right:4%;bottom:38px;transform:rotate(10deg)}
+.intro .cast .f.i5{left:50%;margin-left:52px;bottom:64px;width:50px;height:50px;transform:rotate(14deg);z-index:1}
+.meta{display:flex;justify-content:center;gap:8px;margin-top:16px;flex-wrap:wrap}
+.meta span{font-size:13px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-variant-numeric:tabular-nums}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:17px 20px;border-radius:999px;border:0;background:var(--accent);color:var(--accent-fg);font-family:var(--display);font-size:20px;letter-spacing:.02em;transition:transform .15s ease,background-color .15s ease,box-shadow .15s ease;box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 35%,transparent)}
+.btn:hover{background:var(--accent-deep)}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.7;cursor:progress}
+.btn.ghost{background:transparent;color:var(--fg);border:2px solid var(--line);font-size:17px;box-shadow:none}
+.btn.ghost:hover{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.stack{display:grid;gap:10px;margin-top:18px}
+.hint{text-align:center;font-size:13px;color:var(--muted);margin-top:12px}
+.foot{margin-top:28px;text-align:center;font-size:12px;color:var(--muted)}
+
+/* quiz */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding-block:10px 12px;z-index:2}
+.progress{display:flex;align-items:center;gap:12px}
+.progress .n{font-family:var(--display);font-size:16px;color:var(--muted);font-variant-numeric:tabular-nums;flex:0 0 auto}
+.dots{flex:1;display:grid;grid-template-columns:repeat(8,1fr);gap:6px}
+.dots i{display:grid;place-items:center;height:22px}
+.dots i::before{content:"";width:18px;height:18px;background:var(--line);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);transition:background-color .3s ease,transform .3s ease}
+.dots i.on::before{background:var(--moon);transform:scale(1.15)}
+.dots i.now::before{background:var(--accent)}
+.ask{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:start;margin-top:10px}
+.ask .av{width:56px;height:64px}
+.bubble{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:18px 18px 18px 6px;padding:14px 16px}
+.bubble::before{content:"";position:absolute;left:-8px;bottom:14px;width:14px;height:14px;background:var(--surface);border-left:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
+.bubble .scene{color:var(--muted);font-size:12.5px;font-weight:700;letter-spacing:.04em;margin-bottom:4px}
+.bubble h2{font-size:24px}
+.opts{display:grid;gap:10px;margin-top:18px}
+.opt{display:flex;gap:12px;align-items:center;text-align:left;width:100%;padding:14px 14px 14px 12px;border-radius:18px;border:2px solid var(--line);background:var(--surface);color:var(--fg);font-size:15.5px;line-height:1.45;transition:transform .12s ease,border-color .12s ease,background-color .12s ease}
+.opt .key{flex:0 0 32px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:15px;color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface));transition:background-color .12s ease,color .12s ease}
+.opt span{min-width:0}
+@media (hover:hover){.opt:hover{border-color:var(--accent);transform:translateX(3px)}}
+.opt:active{transform:scale(.99)}
+.opt[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface))}
+.opt[aria-pressed="true"] .key{background:var(--accent);color:var(--accent-fg)}
+.q.enter{animation:slide .3s ease both}
+@keyframes slide{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+.back{margin-top:18px;background:none;border:0;color:var(--muted);font-size:14px;text-decoration:underline;text-underline-offset:3px;padding:8px 0}
+.kbd{display:none;margin-top:14px;font-size:12px;color:var(--muted);text-align:center}
+@media (hover:hover) and (pointer:fine){.kbd{display:block}}
+
+/* loading */
+.calc .sky{padding:54px 22px;text-align:center}
+.calc .shoot{animation-delay:.2s;animation-duration:2.2s}
+.calc h2{font-size:24px;position:relative}
+.calc p{color:var(--sky-muted);margin-top:6px;position:relative}
+.calc .orbit{width:90px;height:90px;margin:0 auto 20px;position:relative}
+.calc .orbit .m{position:absolute;inset:18px;border-radius:50%;background:var(--moon)}
+.calc .orbit .s{position:absolute;top:0;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#fff;transform-origin:7px 45px}
+@media (prefers-reduced-motion:no-preference){.calc .orbit .s{animation:orb 1.1s linear infinite}}
+@keyframes orb{to{transform:rotate(360deg)}}
+
+/* result */
+.card{border-radius:28px;border:1px solid var(--line);background:var(--surface);overflow:hidden}
+@media (prefers-reduced-motion:no-preference){.card{animation:pop .45s cubic-bezier(.2,.9,.3,1.2) both}}
+@keyframes pop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+.card .head{padding:26px 22px 22px;text-align:center;color:var(--ink);background:var(--c);position:relative;overflow:hidden}
+.card .head::before{content:"";position:absolute;left:50%;top:60px;width:260px;height:260px;transform:translateX(-50%);border-radius:50%;background:rgba(255,255,255,.35)}
+.card .head>*{position:relative}
+.card .head .eyebrow{color:rgba(20,15,40,.6)}
+.card .head .chip{display:inline-block;font-family:var(--display);font-size:13px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.6);color:var(--ink);margin-top:8px}
+.card .head .av{width:150px;height:150px;margin:8px auto 4px;filter:drop-shadow(0 12px 18px rgba(0,0,0,.18))}
+.card .head .av.bestie{width:130px;height:180px}
+.card .head h2{font-size:42px;margin-top:4px}
+.card .head .title{font-family:var(--display);font-size:19px;margin-top:2px;color:rgba(20,15,40,.85)}
+.card .head .tag{font-size:14px;font-weight:500;margin-top:4px;color:rgba(20,15,40,.7)}
+.card .body{padding:22px}
+.card .body p.lead{font-size:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+@media (max-width:360px){.grid2{grid-template-columns:1fr}}
+.tile{border-radius:16px;padding:12px 14px;background:color-mix(in srgb,var(--c) 16%,var(--surface));min-width:0}
+.tile .k{font-size:12px;letter-spacing:.1em;color:var(--muted);font-weight:700}
+.tile .v{font-size:14.5px;margin-top:4px}
+.quote{margin-top:18px;border-left:4px solid var(--c);padding:10px 14px;border-radius:0 14px 14px 0;background:color-mix(in srgb,var(--c) 8%,var(--surface))}
+.quote .k{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.08em}
+.quote .v{font-family:var(--display);font-size:19px;margin-top:2px}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.match .m{min-width:0;display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:16px;padding:10px 12px}
+.match .m .av{width:40px;height:40px;flex:0 0 40px}
+.match .m .av.bestie{height:50px}
+.match .k{font-size:11px;letter-spacing:.1em;color:var(--muted);font-weight:700}
+.match .v{font-family:var(--display);font-size:16px}
+.match .why{font-size:12px;color:var(--muted)}
+.tip{margin-top:18px;padding:14px 16px;border-radius:16px;background:var(--bg);font-size:14.5px}
+.tip b{font-family:var(--display);font-weight:400;color:var(--accent)}
+.others{margin-top:28px}
+.others h3{font-size:18px;color:var(--muted)}
+.types{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.type{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;border:1px solid var(--line);background:var(--surface);text-align:left;min-width:0;transition:border-color .12s ease,transform .12s ease}
+@media (hover:hover){.type:hover{border-color:var(--accent);transform:translateY(-2px)}}
+.type .av{width:40px;height:40px;flex:0 0 40px}
+.type .av.bestie{height:50px}
+.type .n{font-family:var(--display);font-size:15px;line-height:1.2}
+.type .t{font-size:12px;color:var(--muted);line-height:1.3}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .25s ease,transform .25s ease;pointer-events:none;white-space:nowrap;z-index:9}
+.toast.on{opacity:1;transform:translateX(-50%)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- INTRO -->
+  <section id="intro" class="intro">
+    <div class="sky">
+      <div class="stars" aria-hidden="true"></div>
+      <div class="moon" aria-hidden="true"></div>
+      <span class="shoot" aria-hidden="true"></span>
+      <p class="eyebrow">달나라 살리기 프로젝트</p>
+      <h1>나는 어떤<br>투자 유형일까?</h1>
+      <p class="sub">별똥별이 「주식.」 한마디를 남기고 갔어요.<br>달토끼 베스티와 친구들 중 당신은 누구?</p>
+      <div class="cast" id="cast" aria-hidden="true"></div>
+    </div>
+    <div class="meta"><span>⏱ 1분</span><span>8문항</span><span>6가지 유형</span></div>
+    <div class="stack">
+      <button class="btn" id="start">테스트 시작하기</button>
+    </div>
+    <p class="hint">결과는 친구에게 바로 공유할 수 있어요</p>
+    <p class="foot">INVESTING101 베스티 세계관 · 재미로 보는 성향 테스트예요</p>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" hidden>
+    <div class="topbar">
+      <div class="progress" role="progressbar" aria-label="진행 상황" aria-valuemin="1" aria-valuemax="8" aria-valuenow="1" id="prog">
+        <span class="n" id="pnum">1/8</span>
+        <div class="dots" id="dots" aria-hidden="true"></div>
+      </div>
+    </div>
+    <div id="qbox" aria-live="polite"></div>
+    <p class="kbd">키보드 1~4로도 고를 수 있어요</p>
+    <button class="back" id="back">← 이전 질문</button>
+  </section>
+
+  <!-- CALC -->
+  <section id="calc" class="calc" hidden>
+    <div class="sky">
+      <div class="stars" aria-hidden="true"></div>
+      <span class="shoot" aria-hidden="true"></span>
+      <div class="orbit" aria-hidden="true"><div class="m"></div><div class="s"></div></div>
+      <h2>별똥별이 분석 중…</h2>
+      <p>달에서 지구까지 신호를 보내는 중이에요</p>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="result" hidden>
+    <div id="card"></div>
+    <div class="stack">
+      <button class="btn" id="share">결과 공유하기</button>
+      <button class="btn ghost" id="save">결과 카드 이미지로 저장</button>
+    </div>
+    <div style="text-align:center"><button class="back" id="retry">다시 테스트하기</button></div>
+    <div class="others">
+      <h3>다른 유형도 구경하기</h3>
+      <div class="types" id="types"></div>
+    </div>
+    <p class="foot">INVESTING101 베스티 세계관 · 재미로 보는 성향 테스트예요</p>
+  </section>
+
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<canvas id="cv" width="1080" height="1350" hidden></canvas>
+
+<script>
+/* ---------- character images (Figma lottie/LO-NA-01-07 profile set + 베스티) ---------- */
+var SIZE={bestie:[303,430],cred:[280,280],randy:[280,280],rob:[280,280],ton:[280,280],rai:[280,280]};
+function src(key){return 'assets/av-'+key+'.png'}
+function av(key){
+  var cls='av '+(key==='bestie'?'bestie':'sq');
+  return '<img class="'+cls+'" src="'+src(key)+'" width="'+SIZE[key][0]+'" height="'+SIZE[key][1]+'" alt="'+TYPES[key].name+'" decoding="async">';
+}
+
+/* ---------- types ---------- */
+var TYPES={
+  cred:{name:'크레드',color:'#ffb3ad',colorName:'빨강',title:'급등주 도파민형',tag:'오늘도 상한가를 쫓는 재벌 2세',
+    lead:'회사를 물려받을 줄 알았는데, 흥청망청 쓰다 돈이 떨어져 주식을 시작했어요. 의외로 재미를 붙였고 실력도 좋아요. 다만 급등주만 보면 손이 먼저 나가요.',
+    strong:'빠른 판단, 실전 감각',weak:'손절을 못 함, 한 종목 몰빵',
+    quoteBy:'베스티의 한마디',quote:'크레드야… 달에선 그렇게 하면 떡 못 사 먹어.',
+    good:'rai',bad:'rob',goodWhy:'브레이크 역할',badWhy:'당신 돈을 노림',
+    tip:'한 종목 비중 상한선을 미리 정해두세요. 도파민은 상한가가 아니라 계좌 잔고에서 나와야 해요.'},
+  randy:{name:'랜디',color:'#ffc999',colorName:'주황',title:'낙천 플렉스형',tag:'세상은 아직 아름답다고 믿는 전직 가수',
+    lead:'친구 말만 믿고 들어갔다가 크게 당한 적이 있어요. 사기도 여러 번 당했지만, 이번엔 제대로 공부해보자고 다짐했죠. 명품 사랑은 아직 못 끊었지만요.',
+    strong:'회복력, 긍정 에너지',weak:'귀가 얇음, 소비 습관',
+    quoteBy:'베스티의 한마디',quote:'랜디, 그 「친구」 혹시 노란색 아니었어?',
+    good:'ton',bad:'rob',goodWhy:'원칙을 빌려오기',badWhy:'이미 한 번 당함',
+    tip:'누가 추천한 종목은 3일 뒤에 다시 보세요. 3일 뒤에도 좋아 보이면 그때 소액으로.'},
+  rob:{name:'롭',color:'#ffe08a',colorName:'노랑',title:'불신 자수성가형',tag:'아무도 믿지 않는 동글동글 전략가',
+    lead:'순한 얼굴로 금세 믿음을 얻지만 속은 철저하게 계산적이에요. 작게 태어나 다 빼앗기며 자란 탓에 「개부자가 되겠다」고 이를 악물었죠. 돈이 어디로 흐르는지 읽는 눈이 탁월해요.',
+    strong:'리스크 감지, 구조 분석',weak:'과한 불신, 협업 불가',
+    quoteBy:'베스티의 한마디',quote:'롭… 나한테 접근하는 거 다 알아.',
+    good:'rai',bad:'randy',goodWhy:'유일하게 못 속임',badWhy:'당신을 피해 다님',
+    tip:'가끔은 남의 분석도 믿어보세요. 혼자 다 계산하다 보면 좋은 기회를 놓쳐요.'},
+  ton:{name:'미스터 톤',color:'#b8ecb0',colorName:'초록',title:'가족 지킴 안정형',tag:'치료비를 위해 매일 뉴스를 읽는 다정한 아빠',
+    lead:'아픈 아내의 치료비를 마련하려고 투자 공부를 시작했어요. 원칙을 지키고, 잃으면 안 되는 돈은 절대 건드리지 않아요. 단, 다니던 건설사 주식만큼은 절대 사지 않아요.',
+    strong:'원칙, 꾸준함',weak:'기회를 자주 놓침, 감정 섞인 종목 기피',
+    quoteBy:'베스티의 한마디',quote:'아저씨, 우리 동생들 간식 챙겨줘서 고마워요.',
+    good:'randy',bad:'cred',goodWhy:'서로 균형',badWhy:'따라가면 큰일',
+    tip:'배당주와 적립식이 체질이에요. 목표 기간을 정해두면 흔들리지 않아요.'},
+  rai:{name:'라이',color:'#b3dcff',colorName:'파랑',title:'데이터 천재형',tag:'염동력으로 우주선을 모는 장수 실험견',
+    lead:'우주에서 방사선을 쬔 뒤로 아주 오래 살았고, 그만큼 아는 것도 많아요. 「결혼하려면 돈이 많아야 한다」는 말에 주식을 시작했죠. 분석은 완벽한데 혀는 늘 나와 있어요.',
+    strong:'리서치, 인내심',weak:'분석만 하다 타이밍 놓침',
+    quoteBy:'베스티의 한마디',quote:'라이, 토끼여도 괜찮다는 말… 나 들었어.',
+    good:'cred',bad:'rob',goodWhy:'서로 보완',badWhy:'상대할 가치 없음',
+    tip:'분석이 끝났으면 소액이라도 실행하세요. 완벽한 타이밍은 오지 않아요.'},
+  bestie:{name:'베스티',color:'#cfc3ff',colorName:'보라',title:'행성 살리기 책임형',tag:'동생 열 마리를 둔 달토끼 맏이',
+    lead:'목표가 분명해요. 돈을 벌어 달에 풀을 심고 물을 끌어오는 것. 낯선 곳은 무섭지만 책임감 하나로 지구까지 내려왔어요. 손실이 나면 밤새 차트만 보는 소심한 면도 있어요.',
+    strong:'목적 중심, 책임감',weak:'소심함, 손실에 밤샘',
+    quoteBy:'별똥별의 한마디',quote:'주식.',
+    good:'ton',bad:'rob',goodWhy:'동생들을 챙겨줌',badWhy:'돈 모으면 접근 예정',
+    tip:'목표 금액을 정해두고 거기까지만. 달을 살리는 데 필요한 만큼이면 충분해요.'}
+};
+var ORDER=['bestie','ton','rai','rob','randy','cred']; // tie-break: rarer first
+
+/* ---------- questions ---------- */
+var Q=[
+ {scene:'달나라 · 밤',q:'별똥별이 지나간다! 빌 소원은?',o:[
+   ['한 방에 부자 되게 해주세요','cred'],['우리 가족 건강하게 해주세요','ton'],
+   ['우리 동네가 다시 푸르게 되게요','bestie'],['나랑 잘 맞는 짝 만나게요','rai']]},
+ {scene:'월급날',q:'돈이 들어왔다. 제일 먼저 하는 일은?',o:[
+   ['오늘 급등한 종목부터 검색','cred'],['예쁜 거 하나 산다. 세상은 아름다우니까','randy'],
+   ['전부 저축. 아무도 못 건드려','rob'],['동생들 간식부터 챙긴다','bestie']]},
+ {scene:'친구의 귓속말',q:'「이거 무조건 오른대」라는 말을 들으면?',o:[
+   ['바로 탑승','cred'],['친구 말이면 믿지','randy'],
+   ['그 정보 출처를 3일간 조사','rai'],['누가 이득 보는 구조인지부터 본다','rob']]},
+ {scene:'계좌 확인',q:'보유 종목이 하루 만에 -20%!',o:[
+   ['물타기. 더 산다','cred'],['밤새 차트만 본다. 마음이 아프다','bestie'],
+   ['처음 계획대로. 생활비는 건드리지 않는다','ton'],['원인 분석 보고서를 쓴다','rai']]},
+ {scene:'공부 시간',q:'투자 공부, 어떻게 해?',o:[
+   ['공부? 사람 심리를 읽는 게 전부다','rob'],['유튜브 보다가 명품 하울로 샜다','randy'],
+   ['책 10권 정독하고 데이터 직접 돌려봄','rai'],['매일 뉴스 꼼꼼히. 월급쟁이 감각으로','ton']]},
+ {scene:'SNS',q:'수익 인증 자랑하는 사람을 보면?',o:[
+   ['부럽다… 근데 난 책임질 동생들이 있어서','bestie'],['멋지다~ 진심으로 축하해준다','randy'],
+   ['저 돈이 어디로 샐지 계산해본다','rob'],['축하해주고 애들 학원비나 생각한다','ton']]},
+ {scene:'원칙',q:'절대 안 사는 주식이 있다면?',o:[
+   ['나한테 상처 준 회사 주식','ton'],['사기꾼이 추천했던 종목','randy'],
+   ['내가 설명 못 하는 종목','rai'],['없다. 오르면 다 산다','cred']]},
+ {scene:'떡상!',q:'드디어 떡상했다. 제일 먼저 할 일은?',o:[
+   ['달에 풀 심고 물 끌어오기','bestie'],['더 큰 베팅','cred'],
+   ['명품으로 플렉스','randy'],['더 벌 방법을 짠다. 아무도 안 믿고','rob']]}
+];
+
+/* ---------- state ---------- */
+var $=function(id){return document.getElementById(id)};
+var screens=['intro','quiz','calc','result'];
+var answers=[],cur=0,locked=false;
+function show(id){screens.forEach(function(s){$(s).hidden=(s!==id)});window.scrollTo(0,0)}
+
+function renderCast(){
+  $('cast').innerHTML=
+    '<img class="f i1" src="'+src('cred')+'" width="280" height="280" alt="">'+
+    '<img class="f i2" src="'+src('randy')+'" width="280" height="280" alt="">'+
+    '<img class="bestie" src="'+src('bestie')+'" width="303" height="430" alt="" fetchpriority="high">'+
+    '<img class="f i3" src="'+src('rob')+'" width="280" height="280" alt="">'+
+    '<img class="f i4" src="'+src('ton')+'" width="280" height="280" alt="">'+
+    '<img class="f i5" src="'+src('rai')+'" width="280" height="280" alt="">';
+}
+function renderDots(){
+  var h='';for(var i=0;i<Q.length;i++){h+='<i class="'+(i<cur?'on':i===cur?'now':'')+'"></i>'}
+  $('dots').innerHTML=h;
+}
+function renderQ(){
+  var q=Q[cur];
+  $('pnum').textContent=(cur+1)+'/'+Q.length;
+  $('prog').setAttribute('aria-valuenow',cur+1);
+  renderDots();
+  var html='<div class="q enter"><div class="ask">'+av('bestie')+
+    '<div class="bubble"><p class="scene">'+q.scene+'</p><h2>'+q.q+'</h2></div></div><div class="opts">';
+  q.o.forEach(function(opt,i){
+    var picked=answers[cur]===i;
+    html+='<button class="opt" data-i="'+i+'" aria-pressed="'+picked+'"><span class="key">'+'ABCD'[i]+'</span><span>'+opt[0]+'</span></button>';
+  });
+  html+='</div></div>';
+  $('qbox').innerHTML=html;
+  $('back').hidden=cur===0;
+  locked=false;
+  Array.prototype.forEach.call($('qbox').querySelectorAll('.opt'),function(b){
+    b.addEventListener('click',function(){pick(+b.dataset.i,b)});
+  });
+}
+function pick(i,btn){
+  if(locked)return;locked=true;
+  Array.prototype.forEach.call($('qbox').querySelectorAll('.opt'),function(b){b.setAttribute('aria-pressed','false')});
+  btn.setAttribute('aria-pressed','true');
+  answers[cur]=i;
+  setTimeout(function(){
+    if(cur<Q.length-1){cur++;renderQ()}else{finish()}
+  },260);
+}
+document.addEventListener('keydown',function(e){
+  if($('quiz').hidden)return;
+  var n='1234'.indexOf(e.key);
+  if(n>-1){var b=$('qbox').querySelectorAll('.opt')[n];if(b)pick(n,b)}
+});
+function score(){
+  var s={};ORDER.forEach(function(k){s[k]=0});
+  answers.forEach(function(a,qi){ if(a==null)return; s[Q[qi].o[a][1]]++ });
+  var best=ORDER[0];
+  ORDER.forEach(function(k){ if(s[k]>s[best])best=k });
+  return best;
+}
+function finish(){
+  cur=Q.length;renderDots();
+  show('calc');
+  var key=score();
+  setTimeout(function(){showResult(key,false)},1500);
+}
+function tile(k,v){return '<div class="tile"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>'}
+function showResult(key,fromLink){
+  var t=TYPES[key];
+  var g=TYPES[t.good],b=TYPES[t.bad];
+  $('card').innerHTML=
+   '<div class="card" style="--c:'+t.color+'">'+
+    '<div class="head"><p class="eyebrow">'+(fromLink?'이 투자 유형은':'나의 투자 유형')+'</p>'+av(key)+
+      '<h2>'+t.name+'</h2><p class="title">'+t.title+'</p><p class="tag">'+t.tag+'</p><span class="chip">'+t.colorName+' 유형</span></div>'+
+    '<div class="body"><p class="lead">'+t.lead+'</p>'+
+      '<div class="grid2">'+tile('강점',t.strong)+tile('약점',t.weak)+'</div>'+
+      '<div class="quote"><div class="k">'+t.quoteBy+'</div><div class="v">「'+t.quote+'」</div></div>'+
+      '<div class="match">'+
+        '<div class="m">'+av(t.good)+'<div><div class="k">잘 맞는 친구</div><div class="v">'+g.name+'</div><div class="why">'+t.goodWhy+'</div></div></div>'+
+        '<div class="m">'+av(t.bad)+'<div><div class="k">조심할 친구</div><div class="v">'+b.name+'</div><div class="why">'+t.badWhy+'</div></div></div>'+
+      '</div>'+
+      '<div class="tip"><b>베스티의 처방</b><br>'+t.tip+'</div>'+
+    '</div></div>';
+  $('share').dataset.key=key;
+  $('save').dataset.key=key;
+  $('share').dataset.mode=fromLink?'test':'share';
+  $('share').textContent=fromLink?'나도 테스트하기':'결과 공유하기';
+  $('save').hidden=!!fromLink;
+  $('retry').textContent=fromLink?'처음으로':'다시 테스트하기';
+  $('types').innerHTML=ORDER.filter(function(k){return k!==key}).map(function(k){
+    return '<button class="type" data-k="'+k+'">'+av(k)+'<div><div class="n">'+TYPES[k].name+'</div><div class="t">'+TYPES[k].title+'</div></div></button>';
+  }).join('');
+  Array.prototype.forEach.call($('types').querySelectorAll('.type'),function(c){
+    c.addEventListener('click',function(){showResult(c.dataset.k,true)});
+  });
+  show('result');
+}
+var toastTimer;
+function toast(msg){var t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove('on')},2000)}
+function baseUrl(){return location.href.split('#')[0].split('?')[0]}
+function shareUrl(key){return baseUrl().replace(/index\.html$/,'')+'r/'+key+'.html'}
+function shareText(key){
+  var t=TYPES[key];
+  return '나의 베스티 투자 유형은 「'+t.name+' · '+t.title+'」!\n'+t.tag+'\n'+t.quoteBy+': 「'+t.quote+'」\n\n너는 어떤 유형? 👉';
+}
+function fallbackCopy(text){
+  var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(e){}document.body.removeChild(ta);
+}
+function copy(text){
+  var done=function(){toast('복사했어요! 친구에게 붙여넣기')};
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(function(){fallbackCopy(text);done()});
+  }else{fallbackCopy(text);done()}
+}
+function share(key){
+  var text=shareText(key),url=shareUrl(key);
+  if(navigator.share){
+    navigator.share({title:'베스티 투자 유형 테스트',text:text,url:url}).catch(function(e){ if(e&&e.name!=='AbortError'){copy(text+' '+url)} });
+  }else{copy(text+' '+url)}
+}
+
+/* ---------- result card image (1080x1350) ---------- */
+function loadImg(s){return new Promise(function(res,rej){var im=new Image();im.onload=function(){res(im)};im.onerror=rej;im.src=s})}
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+function wrapText(ctx,text,maxW){
+  var words=text.split(' '),lines=[],cur='';
+  words.forEach(function(w){var t=(cur+' '+w).trim();if(ctx.measureText(t).width<=maxW)cur=t;else{if(cur)lines.push(cur);cur=w}});
+  if(cur)lines.push(cur);return lines;
+}
+function drawCard(key){
+  var t=TYPES[key],cv=$('cv'),ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
+  var fontsReady=(document.fonts&&document.fonts.load)?Promise.all([document.fonts.load('80px Jua'),document.fonts.load('700 36px "Noto Sans KR"')]).catch(function(){}):Promise.resolve();
+  return Promise.all([loadImg(src(key)),fontsReady]).then(function(r){
+    var im=r[0];
+    ctx.fillStyle='#171538';ctx.fillRect(0,0,W,H);
+    var seed=7;function rnd(){seed=(seed*9301+49297)%233280;return seed/233280}
+    for(var i=0;i<140;i++){ctx.globalAlpha=.4+rnd()*.6;ctx.fillStyle='#fff';var sx=rnd()*W,sy=rnd()*H,sr=rnd()<.8?1.5:3;ctx.beginPath();ctx.arc(sx,sy,sr,0,7);ctx.fill()}
+    ctx.globalAlpha=1;
+    ctx.fillStyle='#ffd96a';ctx.beginPath();ctx.arc(W-70,90,150,0,7);ctx.fill();
+    ctx.fillStyle='#171538';ctx.beginPath();ctx.arc(W-10,40,140,0,7);ctx.fill();
+    ctx.fillStyle='#b8b1e6';ctx.font='500 34px "Noto Sans KR",sans-serif';ctx.textAlign='center';
+    ctx.fillText('나의 베스티 투자 유형은',W/2,180);
+    ctx.fillStyle=t.color;rr(ctx,120,230,W-240,560,56);ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,.35)';ctx.beginPath();ctx.arc(W/2,560,230,0,7);ctx.fill();
+    var box=key==='bestie'?430:380,scale=Math.min(box/im.width,box/im.height),iw=im.width*scale,ih=im.height*scale,ix=(W-iw)/2,iy=230+(560-ih)/2;
+    if(key!=='bestie'){ctx.save();rr(ctx,ix,iy,iw,ih,iw*.22);ctx.clip();ctx.drawImage(im,ix,iy,iw,ih);ctx.restore()}else{ctx.drawImage(im,ix,iy,iw,ih)}
+    ctx.fillStyle='#fff';ctx.font='96px Jua,"Noto Sans KR",sans-serif';ctx.fillText(t.name,W/2,900);
+    ctx.fillStyle=t.color;ctx.font='48px Jua,"Noto Sans KR",sans-serif';ctx.fillText(t.title,W/2,968);
+    ctx.fillStyle='#f3efff';ctx.font='500 32px "Noto Sans KR",sans-serif';ctx.fillText(t.tag,W/2,1026);
+    ctx.fillStyle='#b8b1e6';ctx.font='500 30px "Noto Sans KR",sans-serif';
+    var ql=wrapText(ctx,t.quoteBy+': 「'+t.quote+'」',W-200),qy=1100;ql.slice(0,2).forEach(function(l){ctx.fillText(l,W/2,qy);qy+=42});
+    ctx.fillStyle='#6e63f5';rr(ctx,W/2-260,1210,520,70,35);ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='700 28px "Noto Sans KR",sans-serif';ctx.fillText('너는 어떤 유형? 테스트 하러 가기',W/2,1256);
+    ctx.fillStyle='#8c86be';ctx.font='500 22px "Noto Sans KR",sans-serif';ctx.fillText('yunju-2626.github.io/bestie-invest-type',W/2,1318);
+    return new Promise(function(res){cv.toBlob(res,'image/png')});
+  });
+}
+function saveCard(key){
+  var btn=$('save'),label=btn.textContent;btn.textContent='카드 만드는 중…';btn.disabled=true;
+  drawCard(key).then(function(blob){
+    var file=new File([blob],'bestie-type-'+key+'.png',{type:'image/png'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      return navigator.share({files:[file],title:'베스티 투자 유형 테스트',text:shareText(key)+' '+shareUrl(key)}).catch(function(e){if(e&&e.name!=='AbortError')download(blob,file.name)});
+    }
+    download(blob,file.name);toast('이미지를 저장했어요');
+  }).catch(function(){toast('이미지를 만들지 못했어요. 다시 시도해 주세요')}).then(function(){btn.textContent=label;btn.disabled=false});
+}
+function download(blob,name){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1000)}
+
+function startQuiz(){answers=[];cur=0;renderQ();show('quiz')}
+
+$('start').addEventListener('click',startQuiz);
+$('back').addEventListener('click',function(){if(cur>0){cur--;renderQ()}});
+$('share').addEventListener('click',function(){
+  if($('share').dataset.mode==='test'){startQuiz();return}
+  share($('share').dataset.key);
+});
+$('save').addEventListener('click',function(){saveCard($('save').dataset.key)});
+$('retry').addEventListener('click',function(){answers=[];cur=0;history.replaceState(null,'',baseUrl());show('intro')});
+
+renderCast();
+var h=(location.hash||'').replace('#','');
+if(TYPES[h]){showResult(h,true)}else{show('intro')}
+</script>
+
+</body>
+</html>
